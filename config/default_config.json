@@ -1,0 +1,11 @@
+{
+  "tableauDesktopPath": "",
+  "defaultExportDir": "~/Documents/DataExportPlugin/Tableau",
+  "defaultLogDir": "~/Documents/TableauExports/logs",
+  "recentTwbFilesLimit": 5,
+  "recentTwbFiles": [],
+  "defaultTimeoutSeconds": 300,
+  "defaultStartCell": "A1",
+  "defaultHeaderRows": 1,
+  "worksheetSheetMappings": {}
+}

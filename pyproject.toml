@@ -1,0 +1,19 @@
+[project]
+name = "tableau-wps-helper"
+version = "0.1.0"
+description = "Local helper scaffold for exporting Tableau worksheet data into WPS/Excel workbooks."
+requires-python = ">=3.10"
+dependencies = [
+  "openpyxl>=3.1.0"
+]
+
+[project.optional-dependencies]
+windows = [
+  "pywinauto>=0.6.9"
+]
+
+[project.scripts]
+tableau-wps-helper = "tableau_wps_helper.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
