@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.utils.cell import coordinate_to_tuple
 
 
@@ -80,16 +80,23 @@ def import_file_to_workbook(
 ) -> ImportResult:
     source = Path(source_path).expanduser()
     target = Path(workbook_path).expanduser()
-    if not target.exists():
-        raise ExcelImportError(f"Target workbook not found: {target}")
-
     rows = read_source_rows(source)
     start_row, start_col = coordinate_to_tuple(start_cell)
-    workbook = load_workbook(target)
+    if target.exists():
+        workbook = load_workbook(target)
+    else:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        workbook = Workbook()
+
     try:
         if sheet_name not in workbook.sheetnames:
-            raise ExcelImportError(f"Target sheet not found: {sheet_name}")
-        sheet = workbook[sheet_name]
+            sheet = workbook.create_sheet(sheet_name)
+            if "Sheet" in workbook.sheetnames and len(workbook.sheetnames) > 1:
+                default_sheet = workbook["Sheet"]
+                if default_sheet.max_row == 1 and default_sheet.max_column == 1 and default_sheet["A1"].value is None:
+                    workbook.remove(default_sheet)
+        else:
+            sheet = workbook[sheet_name]
         clear_values_preserve_format(sheet, start_row, start_col)
 
         for row_offset, row in enumerate(rows):
