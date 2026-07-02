@@ -7,6 +7,8 @@ from pathlib import Path
 
 from .config import load_config, save_config
 from .excel_writer import ExcelImportError, import_file_to_workbook
+from .job_runner import ImportPlanError, import_plan_result_to_dict, run_import_plan
+from .local_api import serve_local_api
 from .logger import log_path_for, setup_logger
 from .tableau_automation import ExportRequest, TableauAutomation, TableauAutomationError, TableauAutomationUnavailable
 from .twb_parser import TwbParseError, list_worksheets
@@ -56,6 +58,25 @@ def cmd_import_file(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_import_plan(args: argparse.Namespace) -> int:
+    config = load_config()
+    logger = setup_logger(config)
+    try:
+        result = run_import_plan(args.plan)
+        logger.info(
+            "Import plan finished plan=%s succeeded=%s failed=%s",
+            args.plan,
+            len(result.succeeded),
+            len(result.failed),
+        )
+        print(json.dumps(import_plan_result_to_dict(result), ensure_ascii=False, indent=2))
+        return 0 if result.ok else 1
+    except ImportPlanError as exc:
+        logger.error("Import plan failed plan=%s error=%s", args.plan, exc)
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+
+
 def cmd_show_config(args: argparse.Namespace) -> int:
     config = load_config()
     print(json.dumps(config.to_dict(), ensure_ascii=False, indent=2))
@@ -88,10 +109,11 @@ def cmd_automation_status(args: argparse.Namespace) -> int:
     config = load_config()
     automation = TableauAutomation(config.tableau_desktop_path)
     print(json.dumps({
-        "implemented": False,
+        "implemented": True,
+        "platformSupported": sys.platform.startswith("win"),
         "tableauDesktopPath": config.tableau_desktop_path,
         "tableauDesktopPathExists": automation.is_available(),
-        "message": "Tableau Desktop automation interface is reserved but not implemented yet."
+        "message": "First-pass Tableau Desktop automation is available on Windows and should be debugged with Tableau Desktop 2025.2."
     }, ensure_ascii=False, indent=2))
     return 0
 
@@ -126,6 +148,12 @@ def cmd_export_tableau(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    print(f"Tableau WPS helper API listening on http://{args.host}:{args.port}")
+    serve_local_api(args.host, args.port)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Tableau WPS local helper")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -141,6 +169,10 @@ def build_parser() -> argparse.ArgumentParser:
     import_parser.add_argument("--start-cell", default="A1", help="Start cell, default A1")
     import_parser.add_argument("--header-rows", type=int, default=1, help="Header rows count, default 1")
     import_parser.set_defaults(func=cmd_import_file)
+
+    import_plan_parser = subparsers.add_parser("import-plan", help="Import multiple CSV/XLSX files by a JSON plan")
+    import_plan_parser.add_argument("--plan", required=True, help="Import plan JSON file")
+    import_plan_parser.set_defaults(func=cmd_import_plan)
 
     config_parser = subparsers.add_parser("show-config", help="Print current helper config")
     config_parser.set_defaults(func=cmd_show_config)
@@ -174,6 +206,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Continue export if refresh fails. UI confirmation should be added by the WPS layer.",
     )
     export_parser.set_defaults(func=cmd_export_tableau)
+
+    serve_parser = subparsers.add_parser("serve", help="Start local API for the WPS add-in")
+    serve_parser.add_argument("--host", default="127.0.0.1", help="Host, default 127.0.0.1")
+    serve_parser.add_argument("--port", type=int, default=8765, help="Port, default 8765")
+    serve_parser.set_defaults(func=cmd_serve)
 
     return parser
 

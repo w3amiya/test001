@@ -3,6 +3,7 @@
 __all__ = [
     "config",
     "excel_writer",
+    "job_runner",
     "logger",
     "tableau_automation",
     "twb_parser",

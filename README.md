@@ -7,6 +7,7 @@
 - 读取 `.twb` 文件中的 Worksheet 列表
 - 维护最近使用文件、导出目录、Tableau 路径、Sheet 映射等配置
 - 将 CSV / Excel 文件写入指定 `.xlsx` 工作簿的指定 Sheet
+- 通过 JSON 导入计划一次写入多个 Sheet
 - 清空旧数据但尽量保留原 Sheet 格式
 - 写入本地日志
 - 预留 Tableau Desktop 自动化导出接口
@@ -23,6 +24,7 @@ tableau_wps_helper/
     cli.py
     config.py
     excel_writer.py
+    job_runner.py
     logger.py
     tableau_automation.py
     twb_parser.py
@@ -53,6 +55,34 @@ python3 -m tableau_wps_helper.cli import-file \
   --sheet Sheet1 \
   --start-cell A1 \
   --header-rows 1
+```
+
+按导入计划一次写入多个 Sheet：
+
+```bash
+python3 -m tableau_wps_helper.cli import-plan \
+  --plan /path/to/import_plan.json
+```
+
+导入计划示例：
+
+```json
+{
+  "targetWorkbook": "target.xlsx",
+  "startCell": "A1",
+  "headerRows": 1,
+  "items": [
+    {
+      "source": "二段成本汇总.xlsx",
+      "sheet": "二段成本汇总"
+    },
+    {
+      "source": "提单号清洗.csv",
+      "sheet": "提单号清洗",
+      "startCell": "A1"
+    }
+  ]
+}
 ```
 
 记录 Worksheet 到 Sheet 的映射：
@@ -96,4 +126,4 @@ pip install pywinauto openpyxl
 
 ## 说明
 
-当前 `tableau_automation.py` 是接口占位，后续可在 Windows 环境接入 Tableau Desktop 自动化导出。
+当前 `tableau_automation.py` 已提供第一版 Windows 自动化导出尝试，后续需要在 Windows + Tableau Desktop 2025.2 环境下根据实际菜单、弹窗和语言继续调试。

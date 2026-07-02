@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableau导数</title>
+    <link rel="stylesheet" href="./assets/taskpane.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="header">
+        <div>
+          <h1>Tableau导数</h1>
+          <p>连接本地助手，按计划导入到当前工作簿。</p>
+        </div>
+        <span class="status" id="serviceStatus">未连接</span>
+      </header>
+
+      <section class="panel">
+        <label for="apiBase">本地助手地址</label>
+        <div class="inline">
+          <input id="apiBase" value="http://127.0.0.1:8765">
+          <button id="checkService" type="button">检查</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label for="twbPath">Tableau 工作簿路径</label>
+        <input id="twbPath" placeholder="D:\reports\成本模型.twb">
+        <button id="loadWorksheets" type="button">读取 Worksheet</button>
+        <select id="worksheetList" size="5" aria-label="Worksheet 列表"></select>
+      </section>
+
+      <section class="panel">
+        <label for="planPath">导入计划 JSON</label>
+        <input id="planPath" placeholder="D:\reports\import_plan.json">
+        <button class="primary" id="runPlan" type="button">执行导入计划</button>
+      </section>
+
+      <section class="panel">
+        <label for="output">执行结果</label>
+        <pre id="output">等待操作</pre>
+      </section>
+    </main>
+    <script src="./assets/taskpane.js"></script>
+  </body>
+</html>

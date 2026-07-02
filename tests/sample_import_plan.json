@@ -1,0 +1,16 @@
+{
+  "targetWorkbook": "target.xlsx",
+  "startCell": "A1",
+  "headerRows": 1,
+  "items": [
+    {
+      "source": "sample_export.csv",
+      "sheet": "测试导入"
+    },
+    {
+      "source": "sample_export.csv",
+      "sheet": "第二个Sheet",
+      "startCell": "B2"
+    }
+  ]
+}

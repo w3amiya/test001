@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+           xsi:type="TaskPaneApp">
+  <Id>7f53fd6b-f905-4c35-84c1-8f657b1f0b21</Id>
+  <Version>0.1.0</Version>
+  <ProviderName>Finance Data Team</ProviderName>
+  <DefaultLocale>zh-CN</DefaultLocale>
+  <DisplayName DefaultValue="Tableau导数"/>
+  <Description DefaultValue="从 Tableau 导出数据并写入 WPS 表格。"/>
+  <IconUrl DefaultValue="http://127.0.0.1:3000/assets/icon.svg"/>
+  <HighResolutionIconUrl DefaultValue="http://127.0.0.1:3000/assets/icon.svg"/>
+  <SupportUrl DefaultValue="https://github.com/w3amiya/test001"/>
+  <AppDomains>
+    <AppDomain>http://127.0.0.1:8765</AppDomain>
+    <AppDomain>http://127.0.0.1:3000</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="http://127.0.0.1:3000/taskpane.html"/>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+</OfficeApp>

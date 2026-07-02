@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -9,6 +10,7 @@ from typing import Any
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[2] / "config" / "default_config.json"
 USER_CONFIG_PATH = Path.home() / ".tableau_wps_helper" / "config.json"
+FALLBACK_CONFIG_PATH = Path(tempfile.gettempdir()) / "tableau_wps_helper_config.json"
 
 
 @dataclass
@@ -86,8 +88,14 @@ def load_config(path: Path | None = None) -> HelperConfig:
 def save_config(config: HelperConfig, path: Path | None = None) -> None:
     if path is None:
         path = user_config_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(config.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+    content = json.dumps(config.to_dict(), ensure_ascii=False, indent=2)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    except OSError:
+        if path != USER_CONFIG_PATH:
+            raise
+        FALLBACK_CONFIG_PATH.write_text(content, encoding="utf-8")
 
 
 def expand_path(path: str) -> Path:

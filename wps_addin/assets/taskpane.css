@@ -1,0 +1,149 @@
+:root {
+  --navy: #0f1d4a;
+  --blue: #606ca3;
+  --orange: #ed7422;
+  --rose: #d7a38c;
+  --gray: #7f7f7f;
+  --line: #d9deed;
+  --bg: #f6f7fb;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--navy);
+  background: var(--bg);
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+p {
+  margin: 6px 0 0;
+  color: var(--gray);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.status {
+  flex: 0 0 auto;
+  min-width: 64px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--gray);
+  background: var(--white);
+  font-size: 12px;
+  text-align: center;
+}
+
+.status.ok {
+  color: var(--navy);
+  border-color: var(--blue);
+}
+
+.status.bad {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+
+.panel {
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+input,
+select,
+pre {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--navy);
+  font: inherit;
+}
+
+input {
+  min-height: 34px;
+  padding: 7px 9px;
+  font-size: 13px;
+}
+
+select {
+  min-height: 120px;
+  margin-top: 8px;
+  padding: 6px;
+}
+
+pre {
+  min-height: 120px;
+  margin: 0;
+  padding: 10px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: #2f3654;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid var(--blue);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--navy);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--orange);
+}
+
+button.primary {
+  width: 100%;
+  margin-top: 10px;
+  border-color: var(--orange);
+  background: var(--orange);
+  color: var(--white);
+}
+
+.inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: 8px;
+}
